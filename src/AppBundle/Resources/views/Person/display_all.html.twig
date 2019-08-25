@@ -1,0 +1,30 @@
+{% extends "base.html.twig" %}
+
+{% block title %}AppBundle:Person:displayAll{% endblock %}
+
+{% block body %}
+<h2>Welcome to the Person:displayAll page</h2>
+    <div>
+        <div><a href="new">Add new person</a></div>
+        <div>
+            <table>
+
+            {% for person in persons %}
+                <tr>
+                    <td>
+                        <a href="{{ person.id }}">{{ person.firstName }} {{ person.lastName }}</a>
+                    </td>
+                    <td>({{ person.description }})</td>
+                    <td>
+                        <a href="{{ person.id }}/modify">modify</a>
+                    </td>
+                    <td>
+                        <a href="{{ person.id }}/delete">delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </table>
+        </div>
+    </div>
+{% endblock %}

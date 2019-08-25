@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block title %}AppBundle:Person:new{% endblock %}
+
+{% block body %}
+<h2>Welcome to the Person:new page</h2>
+
+    {{ text }}
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+<div>
+    <a href="../{{ id }}/addAddress">add address</a>
+</div>
+
+{% endblock %}

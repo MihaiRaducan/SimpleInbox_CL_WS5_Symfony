@@ -1,0 +1,36 @@
+{% extends "base.html.twig" %}
+
+{% block title %}AppBundle:Person:displayOneById{% endblock %}
+
+{% block body %}
+<h2>Welcome to the Person:displayOneById page</h2>
+
+    {{ message }}
+
+    {% if person != null %}
+        <div>
+            First name: {{ person.firstName }}
+        </div>
+        <div>
+            Last name: {{ person.lastName }}
+        </div>
+        <div>
+            Description: {{ person.description }}
+        </div>
+
+        {% for address in addresses %}
+            Address
+            City: {{ address.city }}
+            Street: {{ address.street }}
+            Number: {{ address.number }}
+        {% endfor %}
+
+        <div>
+            <a href="{{ person.id }}/modify">modify</a>
+        </div>
+        <div>
+            <a href="{{ person.id }}/delete">delete</a>
+        </div>
+    {% endif %}
+
+{% endblock %}
