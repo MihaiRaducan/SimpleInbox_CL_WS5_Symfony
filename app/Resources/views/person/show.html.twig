@@ -21,6 +21,51 @@
                 <th>Description</th>
                 <td>{{ person.description }}</td>
             </tr>
+            <tr>
+                <th>Email(s)</th>
+                {% for email in person.emails  %}
+                    <td>
+                        {{ email }}
+                    </td>
+            </tr>
+            <tr>
+                <th></th>
+            {% endfor %}
+            </tr>
+            <tr>
+                <th>Phone(s)</th>
+            {% for phone in person.phones  %}
+                    <td>
+                        {{ phone }}
+                    </td>
+            </tr>
+            <tr>
+                <th></th>
+            {% endfor %}
+            </tr>
+            <tr>
+                <th>Address(es)</th>
+                {% for address in person.addresses  %}
+                <td>
+                    {{ address }}
+                </td>
+            </tr>
+            <tr>
+                <th></th>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th>Group(s)</th>
+            {% for group in person.groupings  %}
+                    <td>
+                        {{ group }}
+                    </td>
+            </tr>
+            <tr>
+                <th></th>
+            {% endfor %}
+            </tr>
+
         </tbody>
     </table>
 

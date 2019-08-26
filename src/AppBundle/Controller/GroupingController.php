@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Grouping;
+use AppBundle\Entity\Person;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +33,6 @@ class GroupingController extends Controller
 
     /**
      * Creates a new grouping entity.
-     *
      * @Route("/new", name="group_new", methods={"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -43,6 +43,13 @@ class GroupingController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $grouping = $form->getData();
+
+            foreach ($grouping->getPersons() as $selectedPerson) {
+                $selectedPerson->addToGrouping($grouping);
+                $em->persist($selectedPerson);
+            }
+
             $em->persist($grouping);
             $em->flush();
 

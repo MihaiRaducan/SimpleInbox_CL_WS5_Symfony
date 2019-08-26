@@ -6,21 +6,21 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PersonType extends AbstractType
+class AddressType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('firstName')->add('lastName')->add('description')->add('groupings');
+        $builder->add('city')->add('street')->add('number');
     }/**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Person'
+            'data_class' => 'AppBundle\Entity\Address'
         ));
     }
 
@@ -29,6 +29,8 @@ class PersonType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'appbundle_person';
+        return 'appbundle_address';
     }
+
+
 }

@@ -225,8 +225,31 @@ class Person
         $this->groupings = $groupings;
     }
 
+    /**
+     * @param Grouping $grouping
+     */
+    public function addToGrouping (Grouping $grouping) {
+        if ($this->groupings->contains($grouping)) {
+            return;
+        }
+        $this->groupings->add($grouping);
+        $grouping->addPerson($this);
+    }
+
+    /**
+     * @param Grouping $grouping
+     */
+    public function removeFromGrouping (Grouping $grouping) {
+        if (!$this->groupings->contains($grouping)) {
+            return;
+        }
+        $this->groupings->removeElement($grouping);
+        $grouping->removePerson($this);
+    }
+
+
     public function __toString()
     {
-        return $this->getFirstName() . $this->getLastName();
+        return $this->getFirstName() . ' ' . $this->getLastName();
     }
 }

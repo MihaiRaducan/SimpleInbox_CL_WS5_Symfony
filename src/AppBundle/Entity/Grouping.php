@@ -120,6 +120,30 @@ class Grouping
         $this->persons = $persons;
     }
 
+    /**
+     * @param Person $person
+     */
+    public function addPerson(Person $person)
+    {
+        if ($this->persons->contains($person)) {
+            return;
+        }
+        $this->persons->add($person);
+        $person->addToGrouping($this);
+    }
+
+    /**
+     * @param Person $person
+     */
+    public function removePerson(Person $person)
+    {
+        if (!$this->persons->contains($person)) {
+            return;
+        }
+        $this->persons->removeElement($person);
+        $person->removeFromGrouping($this);
+    }
+
     public function __toString()
     {
        return $this->getName();
