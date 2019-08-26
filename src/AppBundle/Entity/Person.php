@@ -4,6 +4,9 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\ManyToMany;
 
 /**
  * Person
@@ -44,7 +47,11 @@ class Person
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity="Address", mappedBy="person")
+     * @ManyToMany(targetEntity="Address")
+     * @JoinTable(name="persons_addresses",
+     *      joinColumns={@JoinColumn(name="person_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="address_id", referencedColumnName="id", unique=true)}
+     *      )
      */
     private $addresses;
 
@@ -216,5 +223,10 @@ class Person
     public function setGroupings($groupings)
     {
         $this->groupings = $groupings;
+    }
+
+    public function __toString()
+    {
+        return $this->getFirstName() . $this->getLastName();
     }
 }

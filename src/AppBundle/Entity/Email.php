@@ -114,4 +114,9 @@ class Email
     {
         $this->person = $person;
     }
+
+    public function __toString()
+    {
+        return $this->getEmailAddress();
+    }
 }

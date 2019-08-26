@@ -2,189 +2,130 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Address;
 use AppBundle\Entity\Person;
-use AppBundle\Form\AddressType;
-use AppBundle\Form\PersonType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Person controller.
+ *
+ * @Route("person")
+ */
 class PersonController extends Controller
 {
     /**
-     * @Route("/new")
+     * Lists all person entities.
+     *
+     * @Route("/", name="person_index", methods={"GET"})
      */
-    public function newAction(Request $request){
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
 
+        $people = $em->getRepository('AppBundle:Person')->findAll();
+
+        return $this->render('person/index.html.twig', array(
+            'people' => $people,
+        ));
+    }
+
+    /**
+     * Creates a new person entity.
+     *
+     * @Route("/new", name="person_new", methods={"GET", "POST"})
+     */
+    public function newAction(Request $request)
+    {
         $person = new Person();
-        $form = $this->createForm(PersonType::class, $person);
-
+        $form = $this->createForm('AppBundle\Form\PersonType', $person);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $person = $form->getData();
             $em = $this->getDoctrine()->getManager();
             $em->persist($person);
             $em->flush();
-            return $this->render('@App/Person/new.html.twig', array(
-                'text' => 'Person added to the database',
-                'form' => $form->createView()
-            ));
+
+            return $this->redirectToRoute('person_show', array('id' => $person->getId()));
         }
 
-        return $this->render('@App/Person/new.html.twig', array(
-            'text' => 'Fill in the values',
-            'form' => $form->createView()
+        return $this->render('person/new.html.twig', array(
+            'person' => $person,
+            'form' => $form->createView(),
         ));
     }
 
     /**
-     * @Route("/{id}/modify")
+     * Finds and displays a person entity.
+     *
+     * @Route("/{id}", name="person_show", methods={"GET"})
      */
-    public function modifyAction(Request $request, $id)
+    public function showAction(Person $person)
     {
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppBundle:Person');
-        $person = $repository->find($id);
+        $deleteForm = $this->createDeleteForm($person);
 
-        if (!$person) {
-            return $this->render('@App/Person/modify.html.twig', array(
-                'text' => 'Person with this ID not found in the database'));
+        return $this->render('person/show.html.twig', array(
+            'person' => $person,
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Displays a form to edit an existing person entity.
+     *
+     * @Route("/{id}/edit", name="person_edit", methods={"GET", "POST"})
+     */
+    public function editAction(Request $request, Person $person)
+    {
+        $deleteForm = $this->createDeleteForm($person);
+        $editForm = $this->createForm('AppBundle\Form\PersonType', $person);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('person_edit', array('id' => $person->getId()));
         }
 
-        $form = $this->createForm(PersonType::class, $person);
-        if ($request->getMethod() === 'GET') {
-            return $this->render('@App/Person/new.html.twig', array(
-                'text' => 'Enter new data',
-                'form' => $form->createView(),
-                'id' => $id
-            ));
-        }
+        return $this->render('person/edit.html.twig', array(
+            'person' => $person,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
 
+    /**
+     * Deletes a person entity.
+     *
+     * @Route("/{id}", name="person_delete", methods={"DELETE"})
+     */
+    public function deleteAction(Request $request, Person $person)
+    {
+        $form = $this->createDeleteForm($person);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $person = $form->getData();
             $em = $this->getDoctrine()->getManager();
-            $em->persist($person);
+            $em->remove($person);
             $em->flush();
-            return $this->render('@App/Person/modify.html.twig', array(
-                'text' => 'Person data updated in the database'
-            ));
         }
 
-        return $this->render('@App/Person/modify.html.twig', array(
-            'text' => 'Invalid data or some other error'
-        ));
+        return $this->redirectToRoute('person_index');
     }
 
     /**
-     * @Route("/{id}/delete")
+     * Creates a form to delete a person entity.
+     *
+     * @param Person $person The person entity
+     *
+     * @return \Symfony\Component\Form\Form The form
      */
-    public function deleteAction(Request $request, $id)
+    private function createDeleteForm(Person $person)
     {
-        $em = $this->getDoctrine()->getManager();
-        $person = $em->getRepository('AppBundle:Person')->find($id);
-        if (!$person) {
-            $returnMessage = 'Person with ID: ' . $id . ' not found in the database';
-            $form = false;
-        }
-        else {
-            if ($request->getMethod() === 'GET') {
-                $returnMessage = 'Are you sure you want to delete person with ID: ' . $id . '?';
-                $form = true;
-            }
-            if ($request->getMethod() === 'POST') {
-                $returnMessage = 'Person with ID: ' . $id . ' was deleted';
-                $em->remove($person);
-                $em->flush();
-                $form = false;
-            }
-        }
-        return $this->render('@App/Person/delete.html.twig', array(
-            'text' => $returnMessage, 'form' => $form
-        ));
-    }
-
-    /**
-     * @Route("/{id}/addAddress")
-     */
-    public function addAddressAction (Request $request, $id) {
-
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppBundle:Person');
-        $person = $repository->find($id);
-        $personAddresses = $person->getAddresses();
-
-        if (!$person) {
-            return $this->render('@App/Person/modify.html.twig', array(
-                'text' => 'Person with this ID not found in the database'));
-        }
-
-        $address = new Address();
-        $form = $this->createForm(AddressType::class, $address);
-        if ($request->getMethod() === 'GET') {
-            return $this->render('@App/Person/address.html.twig', array(
-                'name' => $person->getFirstName() . ' ' . $person->getLastName(),
-                'form' => $form->createView()
-            ));
-        }
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $address = $form->getData();
-            $personAddresses[] = $address;
-            $em = $this->getDoctrine()->getManager();
-            $person->setAddresses($personAddresses);
-            $em->persist($address);
-            $em->persist($person);
-            $em->flush();
-            return $this->render('@App/Person/modify.html.twig', array(
-                'text' => 'Person data updated in the database'
-            ));
-        }
-
-        return $this->render('@App/Person/modify.html.twig', array(
-            'text' => 'Invalid data or some other error'
-        ));
-    }
-
-    /**
-     * @Route("/{id}")
-     */
-    public function displayOneByIdAction(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppBundle:Person');
-        $personToShow = $repository->find($id);
-
-        if (!$personToShow) {
-            return $this->render('@App/Person/modify.html.twig', array(
-                'text' => 'Person with this ID not found in the database'));
-        }
-        else {
-            $message = '';
-            $addresses = $personToShow->getAddresses();
-        }
-
-        return $this->render('@App/Person/display_one_by_id.html.twig', array(
-            'message' => $message, 'person' => $personToShow, 'addresses' => $addresses
-        ));
-    }
-
-    /**
-     * @Route("/")
-     */
-    public function displayAllAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppBundle:Person');
-        $persons = $repository->findAll();
-
-        return $this->render('@App/Person/display_all.html.twig', array(
-            'persons' => $persons
-        ));
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('person_delete', array('id' => $person->getId())))
+            ->setMethod('DELETE')
+            ->getForm()
+        ;
     }
 }

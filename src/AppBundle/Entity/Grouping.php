@@ -119,4 +119,9 @@ class Grouping
     {
         $this->persons = $persons;
     }
+
+    public function __toString()
+    {
+       return $this->getName();
+    }
 }

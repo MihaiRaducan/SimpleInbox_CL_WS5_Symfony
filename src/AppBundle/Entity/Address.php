@@ -42,7 +42,6 @@ class Address
      */
     private $number;
 
-
     /**
      * Get id.
      *
@@ -123,5 +122,13 @@ class Address
     public function getNumber()
     {
         return $this->number;
+    }
+
+    public function __toString()
+    {
+        $city = $this->getCity();
+        $street = $this->getStreet();
+        $number = $this->getNumber();
+        return $city . ', ' . $street . ' ' .$number;
     }
 }

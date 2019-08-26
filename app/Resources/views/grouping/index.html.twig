@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Groupings list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for grouping in groupings %}
+            <tr>
+                <td><a href="{{ path('group_show', { 'id': grouping.id }) }}">{{ grouping.id }}</a></td>
+                <td>{{ grouping.name }}</td>
+                <td>{{ grouping.description }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('group_show', { 'id': grouping.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('group_edit', { 'id': grouping.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('group_new') }}">Create a new grouping</a>
+        </li>
+    </ul>
+{% endblock %}
