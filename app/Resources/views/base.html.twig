@@ -7,6 +7,11 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
+        {% block userInteractions %}
+            <div>Wellcome {{ render(controller(
+                'AppBundle:Default:displayUserName')) }}</div>
+            <div><a href="{{ path('fos_user_security_logout') }}">logout</a></div>
+        {% endblock %}
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>

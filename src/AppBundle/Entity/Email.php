@@ -24,7 +24,7 @@ class Email
     /**
      * @var string
      *
-     * @ORM\Column(name="email_address", type="string", length=100, unique=true)
+     * @ORM\Column(name="email_address", type="string", length=100)
      */
     private $emailAddress;
 

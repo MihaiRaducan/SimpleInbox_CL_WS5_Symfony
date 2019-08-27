@@ -26,6 +26,12 @@ class Person
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="persons")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="first_name", type="string", length=100)
@@ -77,6 +83,22 @@ class Person
         $this->addresses = new ArrayCollection();
         $this->emails = new ArrayCollection();
         $this->groupings = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
     }
 
     /**

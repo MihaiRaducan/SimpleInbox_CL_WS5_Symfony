@@ -3,13 +3,17 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Person;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Person controller.
- *
+ * @Security("has_role('ROLE_USER')")
  * @Route("person")
  */
 class PersonController extends Controller
@@ -19,13 +23,12 @@ class PersonController extends Controller
      *
      * @Route("/", name="person_index", methods={"GET"})
      */
-    public function indexAction()
+    public function indexAction(UserInterface $user=null)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $people = $em->getRepository('AppBundle:Person')->findAll();
+        $people = $user->getPersons();
 
         return $this->render('person/index.html.twig', array(
+            'user' => $user,
             'people' => $people,
         ));
     }

@@ -31,7 +31,7 @@ class Phone
     /**
      * @var string|null
      *
-     * @ORM\Column(name="type", type="string", length=100, nullable=true, unique=true)
+     * @ORM\Column(name="type", type="string", length=100, nullable=true)
      */
     private $type;
 
