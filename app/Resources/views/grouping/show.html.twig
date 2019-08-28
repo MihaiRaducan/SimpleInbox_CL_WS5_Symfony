@@ -17,6 +17,17 @@
                 <th>Description</th>
                 <td>{{ grouping.description }}</td>
             </tr>
+
+            <tr>
+                <th>Person(s)</th>
+                {% for person in grouping.persons %}
+                <td><a href="{{ path('person_show', { 'id': person.id }) }}">{{ person.firstname }} {{ person.lastname }}</a></td>
+            </tr>
+            <tr>
+                <th></th>
+                {% endfor %}
+            </tr>
+
         </tbody>
     </table>
 

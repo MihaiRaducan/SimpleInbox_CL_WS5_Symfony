@@ -10,7 +10,12 @@
 
     <ul>
         <li>
+            <a href="{{ path('person_index') }}">Back to the person list</a>
+        </li>
+        {% if is_granted('ROLE_ADMIN') %}
+        <li>
             <a href="{{ path('address_index') }}">Back to the list</a>
         </li>
+        {% endif %}
     </ul>
 {% endblock %}

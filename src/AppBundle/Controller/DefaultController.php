@@ -19,13 +19,4 @@ class DefaultController extends Controller
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
         ]);
     }
-
-    /**
-     * @Route("/displayUser", name="displayUser")
-     */
-    public function displayUserNameAction () {
-        return new Response(
-            $this->get('security.token_storage')->getToken()->getUser()->getUsername()
-        );
-    }
 }

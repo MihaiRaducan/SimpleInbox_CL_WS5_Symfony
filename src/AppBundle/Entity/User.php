@@ -23,10 +23,16 @@ class User extends BaseUser
      */
     private $persons;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Grouping", mappedBy="user")
+     */
+    private $groupings;
+
     public function __construct()
     {
         parent::__construct();
         $this->persons = new ArrayCollection();
+        $this->groupings = new ArrayCollection();
     }
 
     /**
@@ -43,5 +49,21 @@ class User extends BaseUser
     public function setPersons($persons)
     {
         $this->persons = $persons;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGroupings()
+    {
+        return $this->groupings;
+    }
+
+    /**
+     * @param mixed $groupings
+     */
+    public function setGroupings($groupings)
+    {
+        $this->groupings = $groupings;
     }
 }

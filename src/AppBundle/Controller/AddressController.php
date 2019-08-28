@@ -10,14 +10,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 
 /**
  * Address controller.
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("has_role('ROLE_USER')")
  * @Route("address")
  */
 class AddressController extends Controller
 {
     /**
      * Lists all address entities.
-     *
+     * @Security("has_role('ROLE_ADMIN')")
      * @Route("/", name="address_index", methods={"GET"})
      */
     public function indexAction()
@@ -33,7 +33,7 @@ class AddressController extends Controller
 
     /**
      * Creates a new address entity.
-     *
+     * @Security("has_role('ROLE_ADMIN')")
      * @Route("/new", name="address_new", methods={"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -58,7 +58,7 @@ class AddressController extends Controller
 
     /**
      * Finds and displays a address entity.
-     *
+     * @Security("has_role('ROLE_ADMIN')")
      * @Route("/{id}", name="address_show", methods={"GET"})
      */
     public function showAction(Address $address)
@@ -73,7 +73,7 @@ class AddressController extends Controller
 
     /**
      * Displays a form to edit an existing address entity.
-     *
+     * @Security("has_role('ROLE_ADMIN')")
      * @Route("/{id}/edit", name="address_edit", methods={"GET", "POST"})
      */
     public function editAction(Request $request, Address $address)

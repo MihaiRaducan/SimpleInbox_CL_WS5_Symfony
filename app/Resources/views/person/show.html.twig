@@ -3,9 +3,21 @@
 {% block body %}
     <h1>Person</h1>
 
+<div class="row justify-content-md-start">
+    <div class="col-md-auto">
+    {{ form_start(delete_form) }}
+    <input type="submit" value="Delete">
+    {{ form_end(delete_form) }}
+    </div>
+    <div class="col-md-auto">
+    <form action="{{ path('person_edit', { 'id': person.id }) }}">
+        <input type="submit" value="Edit">
+    </form>
+    </div>
+</div>
     <table>
         <tbody>
-            <tr>
+            <tr class="border border-primary border-bottom-0">
                 <th>Id</th>
                 <td>{{ person.id }}</td>
             </tr>
@@ -17,32 +29,41 @@
                 <th>Lastname</th>
                 <td>{{ person.lastName }}</td>
             </tr>
-            <tr>
+            <tr class="border border-primary border-top-0">
                 <th>Description</th>
                 <td>{{ person.description }}</td>
             </tr>
+
             <tr>
                 <th>Email(s)</th>
                 {% for email in person.emails  %}
                     <td>
-                        {{ email }}
+                        {{ email.emailaddress }} ({{ email.type }})
                     </td>
             </tr>
             <tr>
                 <th></th>
-            {% endfor %}
+                {% endfor %}
+                <td>
+                    <a href="{{ path('add_Email', { 'id': person.id }) }}">add email</a>
+                </td>
             </tr>
+
             <tr>
                 <th>Phone(s)</th>
-            {% for phone in person.phones  %}
+                {% for phone in person.phones  %}
                     <td>
-                        {{ phone }}
+                        {{ phone.phonenumber }} ({{ phone.type }})
                     </td>
             </tr>
             <tr>
                 <th></th>
-            {% endfor %}
+                {% endfor %}
+                <td>
+                    <a href="{{ path('add_Phone', { 'id': person.id }) }}">add phone</a>
+                </td>
             </tr>
+
             <tr>
                 <th>Address(es)</th>
                 {% for address in person.addresses  %}
@@ -53,33 +74,30 @@
             <tr>
                 <th></th>
                 {% endfor %}
+                <td>
+                    <a href="{{ path('add_Address', { 'id': person.id }) }}">add address</a>
+                </td>
             </tr>
             <tr>
                 <th>Group(s)</th>
             {% for group in person.groupings  %}
                     <td>
-                        {{ group }}
+                        <a href="{{ path('group_show', { 'id': group.id }) }}">{{ group.name }}</a>
                     </td>
             </tr>
             <tr>
                 <th></th>
             {% endfor %}
+                <td>
+                    <a href="{{ path('group_index') }}">find groups</a>
+                </td>
             </tr>
-
+            <tr>
+                <th>
+                    <a href="{{ path('person_index') }}">Back to the list</a>
+                </th>
+            </tr>
         </tbody>
     </table>
 
-    <ul>
-        <li>
-            <a href="{{ path('person_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('person_edit', { 'id': person.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
 {% endblock %}

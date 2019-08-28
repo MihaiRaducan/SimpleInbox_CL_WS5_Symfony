@@ -2,6 +2,8 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\AppBundle;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,7 +15,15 @@ class GroupingType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name')->add('description')->add('persons');
+        $user = $options['data']->getUser();
+        dump($user);
+        $builder->add('name')->add('description')
+            ->add('persons', EntityType::class, [
+            'class' => 'AppBundle:Person',
+                'multiple' => true,
+                'required' => false,
+            'choices' => $user->getPersons(),
+        ]);
     }/**
      * {@inheritdoc}
      */
@@ -31,6 +41,4 @@ class GroupingType extends AbstractType
     {
         return 'appbundle_grouping';
     }
-
-
 }

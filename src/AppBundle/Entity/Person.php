@@ -269,6 +269,27 @@ class Person
         $grouping->removePerson($this);
     }
 
+    /**
+     * @param Address $address
+     */
+    public function addAddress(Address $address)
+    {
+        if ($this->addresses->contains($address)) {
+            return;
+        }
+        $this->addresses->add($address);
+    }
+
+    /**
+     * @param Address $address
+     */
+    public function removeAddress(Address $address)
+    {
+        if (!$this->addresses->contains($address)) {
+            return;
+        }
+        $this->addresses->removeElement($address);
+    }
 
     public function __toString()
     {

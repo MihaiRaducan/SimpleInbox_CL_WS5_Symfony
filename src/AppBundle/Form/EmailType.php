@@ -13,7 +13,7 @@ class EmailType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('emailAddress')->add('type')->add('person');
+        $builder->add('emailAddress')->add('type');
     }/**
      * {@inheritdoc}
      */

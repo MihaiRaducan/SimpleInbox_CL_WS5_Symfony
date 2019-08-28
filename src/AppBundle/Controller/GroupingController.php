@@ -5,9 +5,12 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Grouping;
 use AppBundle\Entity\Person;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Grouping controller.
@@ -21,11 +24,15 @@ class GroupingController extends Controller
      *
      * @Route("/", name="group_index", methods={"GET"})
      */
-    public function indexAction()
+    public function indexAction(UserInterface $user=null)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $groupings = $em->getRepository('AppBundle:Grouping')->findAll();
+        if($user->hasRole('ROLE_ADMIN')) {
+            $em = $this->getDoctrine()->getManager();
+            $groupings = $em->getRepository('AppBundle:Grouping')->findAll();
+        }
+        else {
+            $groupings = $user->getGroupings();
+        }
 
         return $this->render('grouping/index.html.twig', array(
             'groupings' => $groupings,
@@ -36,9 +43,10 @@ class GroupingController extends Controller
      * Creates a new grouping entity.
      * @Route("/new", name="group_new", methods={"GET", "POST"})
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, UserInterface $user=null)
     {
         $grouping = new Grouping();
+        $grouping->setUser($user);
         $form = $this->createForm('AppBundle\Form\GroupingType', $grouping);
         $form->handleRequest($request);
 
@@ -50,7 +58,6 @@ class GroupingController extends Controller
                 $selectedPerson->addToGrouping($grouping);
                 $em->persist($selectedPerson);
             }
-
             $em->persist($grouping);
             $em->flush();
 
@@ -68,8 +75,11 @@ class GroupingController extends Controller
      *
      * @Route("/{id}", name="group_show", methods={"GET"})
      */
-    public function showAction(Grouping $grouping)
+    public function showAction(Grouping $grouping, UserInterface $user=null)
     {
+        if ($grouping->getUser() != $user && !$user->hasRole('ROLE_ADMIN')) {
+            return $this->redirectToRoute('group_index');
+        }
         $deleteForm = $this->createDeleteForm($grouping);
 
         return $this->render('grouping/show.html.twig', array(
@@ -83,8 +93,11 @@ class GroupingController extends Controller
      *
      * @Route("/{id}/edit", name="group_edit", methods={"GET", "POST"})
      */
-    public function editAction(Request $request, Grouping $grouping)
+    public function editAction(Request $request, Grouping $grouping, UserInterface $user=null)
     {
+        if ($grouping->getUser() != $user && !$user->hasRole('ROLE_ADMIN')) {
+            return $this->redirectToRoute('group_index');
+        }
         $deleteForm = $this->createDeleteForm($grouping);
         $editForm = $this->createForm('AppBundle\Form\GroupingType', $grouping);
         $editForm->handleRequest($request);
